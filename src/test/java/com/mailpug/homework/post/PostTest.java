@@ -17,7 +17,7 @@ class PostTest {
                 .category("SpringBoot")
                 .title("게시글 생성")
                 .content("게시글내용")
-                .createBy("user1")
+                .author("user1")
                 .build();
 
         //when

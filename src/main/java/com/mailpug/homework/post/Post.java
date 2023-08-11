@@ -1,11 +1,12 @@
 package com.mailpug.homework.post;
 
 import com.mailpug.homework.common.entity.BaseEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Getter
@@ -23,14 +24,16 @@ public class Post extends BaseEntity {
 
     private String content;
 
-    private String createBy;
+    @NonNull
+    @Column(name = "create_by")
+    private String author;
 
     @Builder
-    public Post(String category, String title, String content, String createBy) {
+    public Post(String category, String title, String content, String author) {
         this.category = category;
         this.title = title;
         this.content = content;
-        this.createBy = createBy;
+        this.author = author;
     }
 
     public void changeContent(String updateContent) {

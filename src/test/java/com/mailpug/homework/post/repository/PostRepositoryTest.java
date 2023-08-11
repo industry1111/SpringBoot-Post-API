@@ -29,7 +29,7 @@ class PostRepositoryTest {
                 .category("SpringBoot")
                 .title("게시글 생성")
                 .content("게시글내용")
-                .createBy("user1")
+                .author("user1")
                 .build();
 
         postRepository.save(post);
@@ -58,10 +58,13 @@ class PostRepositoryTest {
         void isEmpty() {
             //given && when
             boolean result = postRepository.existsById(99L);
-            
+
             //then
             assertThat(result).isFalse();
         }
     }
+
+
+
 
 }
