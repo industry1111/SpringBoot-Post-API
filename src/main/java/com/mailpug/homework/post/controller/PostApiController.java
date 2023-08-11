@@ -8,10 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
@@ -28,13 +26,7 @@ public class PostApiController {
 
         Long result = postService.addPost(postDto, userId);
 
-        ApiResponse<Long> apiResponse = ApiResponse.<Long>builder()
-                .result(result)
-                .resultCode(SuccessCode.INSERT_SUCCESS.getStatus())
-                .resultMsg(SuccessCode.INSERT_SUCCESS.getMessage())
-                .build();
-
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return createApiResponseEntity(result, SuccessCode.INSERT_SUCCESS);
     }
 
     @GetMapping("/{postId}")
@@ -42,10 +34,14 @@ public class PostApiController {
 
         PostDto result = postService.getPost(postId);
 
-        ApiResponse<PostDto> apiResponse = ApiResponse.<PostDto>builder()
+        return createApiResponseEntity(result, SuccessCode.SELECT_SUCCESS);
+    }
+
+    private <T> ResponseEntity<ApiResponse<T>> createApiResponseEntity(T result, SuccessCode successCode) {
+        ApiResponse<T> apiResponse = ApiResponse.<T>builder()
                 .result(result)
-                .resultCode(SuccessCode.SELECT_SUCCESS.getStatus())
-                .resultMsg(SuccessCode.SELECT_SUCCESS.getMessage())
+                .resultCode(successCode.getStatus())
+                .resultMsg(successCode.getMessage())
                 .build();
 
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);

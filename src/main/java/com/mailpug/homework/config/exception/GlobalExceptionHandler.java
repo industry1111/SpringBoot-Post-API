@@ -97,9 +97,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * BusinessException 에서 발생한 에러
+     * [Exception] 비즈니스로직에서 에서 발생한 에러
      *
-     * @param ex BusinessException
+     * @param ex BusinessExceptionHandler
      * @return ResponseEntity
      */
     @ExceptionHandler(BusinessExceptionHandler.class)

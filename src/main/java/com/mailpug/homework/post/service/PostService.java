@@ -6,20 +6,15 @@ import com.mailpug.homework.post.Post;
 import com.mailpug.homework.post.PostDto;
 import com.mailpug.homework.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MissingRequestHeaderException;
 
 import javax.transaction.Transactional;
-import javax.validation.ConstraintViolationException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
-
 
     @Transactional
     public Long addPost(PostDto postDto, String userId) {
@@ -30,7 +25,9 @@ public class PostService {
                 .content(postDto.getContent())
                 .author(userId)
                 .build();
+
         postRepository.save(post);
+
         return post.getId();
     }
 

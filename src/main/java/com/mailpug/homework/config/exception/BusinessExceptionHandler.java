@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 /**
- * 에러를 사용하기 위한 구현체
+ * 비즈니스 로직 에러를 사용하기 위한 구현체
  */
 public class BusinessExceptionHandler extends RuntimeException {
 

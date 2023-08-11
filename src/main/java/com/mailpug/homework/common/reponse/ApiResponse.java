@@ -11,13 +11,13 @@ import lombok.Getter;
 public class ApiResponse<T> {
 
     //API 응답 결과
-    private T result;
+    private final T result;
 
     //API 응답 코드
-    private int resultCode;
+    private final int resultCode;
 
     //API 응답 코드
-    private String resultMsg;
+    private final String resultMsg;
 
     @Builder
     public ApiResponse(T result, int resultCode, String resultMsg) {
