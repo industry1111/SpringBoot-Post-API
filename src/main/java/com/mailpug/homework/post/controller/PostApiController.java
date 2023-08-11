@@ -37,6 +37,14 @@ public class PostApiController {
         return createApiResponseEntity(result, SuccessCode.SELECT_SUCCESS);
     }
 
+    @PutMapping
+    public ResponseEntity<ApiResponse<Long>> modifyPost(@Valid @RequestBody PostDto postDto,  @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
+
+        Long result = postService.modifyPost(postDto, userId);
+
+        return createApiResponseEntity(result, SuccessCode.UPDATE_SUCCESS);
+    }
+
     private <T> ResponseEntity<ApiResponse<T>> createApiResponseEntity(T result, SuccessCode successCode) {
         ApiResponse<T> apiResponse = ApiResponse.<T>builder()
                 .result(result)

@@ -12,12 +12,14 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     // Client
-    BAD_REQUEST(400,"G001", "잘못된 요청"),
-    INVALID_INPUT_ERROR(400,"G002", "Input 값 오류"),
+    BAD_REQUEST(400,"G001", "잘못된 요청 입니다."),
+    INVALID_INPUT_ERROR(400,"G002", "Input 값 오류 입니다."),
     INVALID_INPUT_HEADER(400,"G003", ""),
 
-    NO_HANDLER_FOUND(404,"G004", "존재하지 않는 API"),
-    NULL_POINT_ERROR(404,"G005", "Null Point Exception");
+    FORBIDDEN_ERROR(403,"G005","권한이 없습니다."),
+
+    NO_HANDLER_FOUND(404,"G005", "존재하지 않는 API"),
+    NULL_POINT_ERROR(404,"G006", "Null Point Exception");
 
     private final int value;
     private final String status;

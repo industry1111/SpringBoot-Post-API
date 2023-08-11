@@ -5,6 +5,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+/**
+ * [공통] API 통신시 페이징 입력 및 keyword 관리
+ */
 @Getter
 public class PageRequestDto {
 

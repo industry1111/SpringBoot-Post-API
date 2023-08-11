@@ -36,7 +36,9 @@ public class Post extends BaseEntity {
         this.author = author;
     }
 
-    public void changeContent(String updateContent) {
-        this.content = updateContent;
+    public void updatePost(PostDto postDto) {
+        this.category = postDto.getCategory();
+        this.title = postDto.getTitle();
+        this.content = postDto.getContent();
     }
 }

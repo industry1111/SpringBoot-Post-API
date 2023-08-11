@@ -13,8 +13,7 @@ public class PostDto {
 
     private String category;
 
-    @NotBlank(message = "게시글 제목이 빈 값 입니다.")
-    @Length(min = 1, max = 100, message = "게시글 제목은 100자를 초과할 수 없습니다.")
+    @Length(min = 1, max = 100, message = "게시글 제목은 1~100자 사이로 작성해 주세요.")
     private String title;
 
     private String content;

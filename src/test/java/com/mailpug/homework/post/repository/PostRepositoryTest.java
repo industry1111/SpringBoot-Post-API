@@ -56,7 +56,8 @@ class PostRepositoryTest {
         @DisplayName("결과 없음")
         @Test
         void isEmpty() {
-            //given && when
+            //given
+            //when
             boolean result = postRepository.existsById(99L);
 
             //then

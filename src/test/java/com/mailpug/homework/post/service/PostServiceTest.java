@@ -62,7 +62,8 @@ class PostServiceTest {
                     .content("content")
                     .author("user1")
                     .build();
-            when(postRepository.findById(anyLong())).thenReturn(Optional.of(post));
+            when(postRepository.findById(anyLong()))
+                    .thenReturn(Optional.of(post));
 
             //when
             PostDto findPostDto = postService.getPost(1L);
@@ -78,7 +79,102 @@ class PostServiceTest {
             //given
             //when
             //then
-            assertThatThrownBy(() -> postService.getPost(1L)).isExactlyInstanceOf(BusinessExceptionHandler.class);
+            assertThatThrownBy(() -> postService.getPost(1L))
+                    .isExactlyInstanceOf(BusinessExceptionHandler.class)
+                    .hasMessage("존재하지 않는 게시글 번호 입니다.");
+        }
+    }
+
+
+    @Nested
+    @DisplayName("게시글 수정")
+    class modifyPostTest {
+        @DisplayName("성공")
+        @Test
+        void success() {
+            //given
+            Post post = Post.builder()
+                    .category("category")
+                    .title("title")
+                    .content("content")
+                    .author("user1")
+                    .build();
+
+            when(postRepository.findById(anyLong()))
+                    .thenReturn(Optional.of(post));
+
+            //when
+            String modifiedText = "내용 수정";
+            PostDto postDto = PostDto.builder()
+                    .id(1L)
+                    .category("Junit")
+                    .title("수정된 제목")
+                    .content(modifiedText)
+                    .author("user1")
+                    .build();
+            postService.modifyPost(postDto,"user1");
+
+            //then
+            assertThat(post.getContent()).isEqualTo(modifiedText);
+        }
+
+        @DisplayName("실패 - 작성자와 수정자 다름")
+        @Test
+        void forbiddenFail() {
+            //given
+            Post post = Post.builder()
+                    .category("category")
+                    .title("title")
+                    .content("content")
+                    .author("user1")
+                    .build();
+
+            when(postRepository.findById(anyLong()))
+                    .thenReturn(Optional.of(post));
+
+            //when
+            String modifiedText = "내용 수정";
+            PostDto postDto = PostDto.builder()
+                    .id(1L)
+                    .category("Junit")
+                    .title("수정된 제목")
+                    .content(modifiedText)
+                    .author("user1")
+                    .build();
+
+
+            //then
+            assertThatThrownBy(() -> postService.modifyPost(postDto,"user2"))
+                    .isExactlyInstanceOf(BusinessExceptionHandler.class)
+                    .hasMessage("권한이 없습니다.");
+        }
+
+        @DisplayName("실패 - 존재하지 않는 게시글")
+        @Test
+        void notFoundFail() {
+            //given
+            Post post = Post.builder()
+                    .category("category")
+                    .title("title")
+                    .content("content")
+                    .author("user1")
+                    .build();
+
+
+            //when
+            String modifiedText = "내용 수정";
+            PostDto postDto = PostDto.builder()
+                    .id(2L)
+                    .category("Junit")
+                    .title("수정된 제목")
+                    .content(modifiedText)
+                    .author("user1")
+                    .build();
+
+            //then
+            assertThatThrownBy(() -> postService.modifyPost(postDto,"user1"))
+                    .isExactlyInstanceOf(BusinessExceptionHandler.class)
+                    .hasMessage("존재하지 않는 게시글 번호 입니다.");
         }
     }
 

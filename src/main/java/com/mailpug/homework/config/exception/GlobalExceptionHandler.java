@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
                 .map(x -> x.getDefaultMessage())
                 .collect(Collectors.toList());
 
-        responseBody.put("errors", errors);
+        responseBody.put("error", errors.get(0));
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
@@ -55,12 +55,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingRequestHeaderException.class)
     protected ResponseEntity<Object> handleMissingRequestHeaderException(MissingRequestHeaderException ex) {
         log.error("MissingRequestHeaderException", ex);
-
         Map<String, Object> responseBody = new LinkedHashMap<>();
         responseBody.put("timestamp", new Date());
         responseBody.put("status", HttpStatus.BAD_REQUEST.value());
 
-        responseBody.put("errorr", "X-USERID 는 필수 입니다.");
+        responseBody.put("error", "X-USERID 는 필수 입니다.");
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
@@ -89,9 +88,9 @@ public class GlobalExceptionHandler {
         }
 
         Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("error", new Date());
+        responseBody.put("timestamp", new Date());
         responseBody.put("status", HttpStatus.BAD_REQUEST.value());
-        responseBody.put("errorr", error);
+        responseBody.put("error", error);
 
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }

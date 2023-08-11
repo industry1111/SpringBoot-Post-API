@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +43,27 @@ public class PostService {
                 .content(post.getContent())
                 .author(post.getCategory())
                 .build();
+    }
+
+    public Long modifyPost(PostDto postDto, String userId) {
+
+        Post post = findPost(postDto.getId());
+
+        validatedUserId(post.getAuthor(), userId);
+
+        post.updatePost(postDto);
+
+        postRepository.save(post);
+
+        return  post.getId();
+    }
+
+    private void validatedUserId(String postUserId, String userId) {
+
+        if (!postUserId.equals(userId)) {
+            throw new BusinessExceptionHandler("권한이 없습니다.", ErrorCode.FORBIDDEN_ERROR);
+        }
+
     }
 
     private Post findPost(Long postId) {

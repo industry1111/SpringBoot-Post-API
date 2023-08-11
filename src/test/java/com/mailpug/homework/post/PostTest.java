@@ -21,10 +21,15 @@ class PostTest {
                 .build();
 
         //when
-        String expected = "게시글 수정";
-        post.changeContent(expected);
+        PostDto updatePostDto = PostDto.builder()
+                .category("Spring")
+                .title("게시글 수정")
+                .content("게시글 내용 수정")
+                .build();
+
+        post.updatePost(updatePostDto);
 
         //then
-        assertThat(post.getContent()).isEqualTo(expected);
+        assertThat(post.getContent()).isEqualTo("게시글 내용 수정");
     }
 }
