@@ -1,4 +1,4 @@
-package com.mailpug.homework.common;
+package com.mailpug.homework.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
