@@ -21,6 +21,11 @@ public class PostApiController {
 
     private final PostService postService;
 
+    /**
+     * [API] 게시글 등록
+     *
+     * @return ResponseEntity<ApiResponse<Long>>: 생성된 게시글 번호 및 응답 코드 반환
+     */
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> addPost(@Valid @RequestBody PostDto postDto, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
 
@@ -29,6 +34,11 @@ public class PostApiController {
         return createApiResponseEntity(result, SuccessCode.INSERT_SUCCESS);
     }
 
+    /**
+     * [API] 게시글 단건 조회
+     *
+     * @return ResponseEntity<ApiResponse<PostDto>>: 조회한 게시글 결과 및 응답 코드 반환
+     */
     @GetMapping("/{postId}")
     public ResponseEntity<ApiResponse<PostDto>> getPost(@PathVariable Long postId) {
 
@@ -37,14 +47,28 @@ public class PostApiController {
         return createApiResponseEntity(result, SuccessCode.SELECT_SUCCESS);
     }
 
-    @PutMapping
+    /**
+     * [API] 게시글 수정
+     *
+     * @return ResponseEntity<ApiResponse<PostDto>>: 수정된 게시글 번호 및 응답 코드 반환
+     */
+    @PatchMapping
     public ResponseEntity<ApiResponse<Long>> modifyPost(@Valid @RequestBody PostDto postDto,  @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
+
+        if (postDto.getId() == null) {
+            throw new IllegalArgumentException("게시글 번호는 필수 입니다.");
+        }
 
         Long result = postService.modifyPost(postDto, userId);
 
         return createApiResponseEntity(result, SuccessCode.UPDATE_SUCCESS);
     }
 
+    /**
+     * [API] 게시글 삭제
+     *
+     * @return ResponseEntity<ApiResponse<PostDto>>: 삭제된 게시글 번호 및 응답 코드 반환
+     */
     @DeleteMapping("{postId}")
     public ResponseEntity<ApiResponse<Long>> deletePost(@PathVariable Long postId, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
 
@@ -62,5 +86,4 @@ public class PostApiController {
 
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-
 }

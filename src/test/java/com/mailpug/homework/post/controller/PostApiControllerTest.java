@@ -5,7 +5,6 @@ import com.mailpug.homework.common.codes.ErrorCode;
 import com.mailpug.homework.config.exception.BusinessExceptionHandler;
 import com.mailpug.homework.post.Post;
 import com.mailpug.homework.post.PostDto;
-import com.mailpug.homework.post.repository.PostRepository;
 import com.mailpug.homework.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,18 +16,18 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(PostApiController.class)
+@MockBean(JpaMetamodelMappingContext.class)
 class PostApiControllerTest {
 
     @Autowired
@@ -36,9 +35,6 @@ class PostApiControllerTest {
 
     @MockBean
     PostService postService;
-
-    @MockBean(JpaMetamodelMappingContext.class)
-    JpaMetamodelMappingContext jpaMetamodelMappingContext;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -58,6 +54,15 @@ class PostApiControllerTest {
                     .build();
 
             String xUserId = "user1";
+
+            Post mockPost = Post.builder()
+                            .category("SpringBoot")
+                            .title("게시글 생성")
+                            .content("게시글내용")
+                            .author(xUserId)
+                            .build();
+
+            when(postService.addPost(any(PostDto.class), anyString())).thenReturn(mockPost.getId());
 
             //when
             //then
@@ -144,6 +149,7 @@ class PostApiControllerTest {
             //given
             String modifiedText = "텍스트 수정";
             PostDto updatePostDto = PostDto.builder()
+                    .id(1L)
                     .category("Spring")
                     .title("타이틀 변경")
                     .content(modifiedText)
@@ -156,12 +162,32 @@ class PostApiControllerTest {
 
             //when
             //then
-            mockMvc.perform(put("/posts")
+            mockMvc.perform(patch("/posts")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updatePostDto))
                             .header("X-USERID",xUserId))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.resultMsg").value("UPDATE SUCCESS"));
+        }
+
+        @DisplayName("실패 - 게시글번호 null")
+        @Test
+        void postIdIsNull() throws Exception {
+            //given
+
+            PostDto updatePostDto = PostDto.builder()
+                    .category("SpringBoot")
+                    .title("게시글 생성")
+                    .content("게시글 내용")
+                    .build();
+            //when
+            //then
+            mockMvc.perform(patch("/posts")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updatePostDto))
+                            .header("X-USERID", "user2"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("게시글 번호는 필수 입니다."));
         }
 
         @DisplayName("실패 - 작성자 수정자 다름")
@@ -176,6 +202,7 @@ class PostApiControllerTest {
                     .build();
 
             PostDto updatePostDto = PostDto.builder()
+                    .id(1L)
                     .category("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글 내용")
@@ -186,7 +213,7 @@ class PostApiControllerTest {
 
             //when
             //then
-            mockMvc.perform(put("/posts")
+            mockMvc.perform(patch("/posts")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updatePostDto))
                             .header("X-USERID", "user2"))

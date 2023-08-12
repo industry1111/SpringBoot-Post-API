@@ -1,26 +1,24 @@
 package com.mailpug.homework.post.repository;
 
-import com.mailpug.homework.common.dto.PageRequestDto;
+import com.mailpug.homework.config.Appconfig;
 import com.mailpug.homework.post.Post;
 import com.mailpug.homework.post.PostDto;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @DataJpaTest
+@Import(Appconfig.class)
 class PostRepositoryTest {
 
     @Autowired
