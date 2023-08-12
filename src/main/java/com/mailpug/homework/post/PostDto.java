@@ -1,10 +1,12 @@
 package com.mailpug.homework.post;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Getter
 public class PostDto {
@@ -20,6 +22,9 @@ public class PostDto {
 
     private String author;
 
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
+
     @Builder
     public PostDto(Long id, String category, String title, String content, String author) {
         this.id = id;
@@ -27,5 +32,16 @@ public class PostDto {
         this.title = title;
         this.content = content;
         this.author = author;
+    }
+
+    @QueryProjection
+    public PostDto(Long id, String category, String title, String content, String author, LocalDateTime createAt, LocalDateTime updateAt) {
+        this.id = id;
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
     }
 }
