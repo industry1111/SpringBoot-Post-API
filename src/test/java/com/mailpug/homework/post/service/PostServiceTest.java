@@ -1,6 +1,5 @@
 package com.mailpug.homework.post.service;
 
-import com.mailpug.homework.common.codes.ErrorCode;
 import com.mailpug.homework.config.exception.BusinessExceptionHandler;
 import com.mailpug.homework.post.Post;
 import com.mailpug.homework.post.PostDto;
@@ -100,10 +99,6 @@ class PostServiceTest {
                     .author("user1")
                     .build();
 
-            when(postRepository.findById(anyLong()))
-                    .thenReturn(Optional.of(post));
-
-            //when
             String modifiedText = "내용 수정";
             PostDto postDto = PostDto.builder()
                     .id(1L)
@@ -112,6 +107,11 @@ class PostServiceTest {
                     .content(modifiedText)
                     .author("user1")
                     .build();
+
+            when(postRepository.findById(anyLong()))
+                    .thenReturn(Optional.of(post));
+
+            //when
             postService.modifyPost(postDto,"user1");
 
             //then
@@ -129,10 +129,6 @@ class PostServiceTest {
                     .author("user1")
                     .build();
 
-            when(postRepository.findById(anyLong()))
-                    .thenReturn(Optional.of(post));
-
-            //when
             String modifiedText = "내용 수정";
             PostDto postDto = PostDto.builder()
                     .id(1L)
@@ -142,7 +138,10 @@ class PostServiceTest {
                     .author("user1")
                     .build();
 
+            when(postRepository.findById(anyLong()))
+                    .thenReturn(Optional.of(post));
 
+            //when
             //then
             assertThatThrownBy(() -> postService.modifyPost(postDto,"user2"))
                     .isExactlyInstanceOf(BusinessExceptionHandler.class)
@@ -151,7 +150,7 @@ class PostServiceTest {
 
         @DisplayName("실패 - 존재하지 않는 게시글")
         @Test
-        void notFoundFail() {
+        void notFoundPost() {
             //given
             Post post = Post.builder()
                     .category("category")
@@ -160,8 +159,6 @@ class PostServiceTest {
                     .author("user1")
                     .build();
 
-
-            //when
             String modifiedText = "내용 수정";
             PostDto postDto = PostDto.builder()
                     .id(2L)
@@ -171,11 +168,36 @@ class PostServiceTest {
                     .author("user1")
                     .build();
 
+            //when
             //then
             assertThatThrownBy(() -> postService.modifyPost(postDto,"user1"))
                     .isExactlyInstanceOf(BusinessExceptionHandler.class)
                     .hasMessage("존재하지 않는 게시글 번호 입니다.");
         }
+    }
+
+
+    @DisplayName("게시글 삭제")
+    @Test
+    void deletePost() {
+        //given
+        Post post = Post.builder()
+                .category("java")
+                .title("게시글 제목")
+                .content("게시글 내용")
+                .author("user1")
+                .build();
+
+
+        when(postRepository.findById(anyLong()))
+                .thenReturn(Optional.of(post));
+
+        //when
+        //then
+        assertThatThrownBy(() -> postService.deletePost(1L, "user2"))
+                .isExactlyInstanceOf(BusinessExceptionHandler.class)
+                .hasMessage("권한이 없습니다.");
+
     }
 
 }

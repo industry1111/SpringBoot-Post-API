@@ -196,5 +196,22 @@ class PostApiControllerTest {
 
     }
 
+    @DisplayName("게시글 삭제")
+    @Test
+    void deletePost() throws Exception {
+        //given
+        Long postId = 1L;
+        String xUserId = "user1";
+
+        //when
+        //then
+        mockMvc.perform(delete("/posts/"+postId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(postId))
+                .header("X-USERID", xUserId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultMsg").value("DELETE SUCCESS"));
+    }
+
 
 }

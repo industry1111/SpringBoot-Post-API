@@ -45,6 +45,14 @@ public class PostApiController {
         return createApiResponseEntity(result, SuccessCode.UPDATE_SUCCESS);
     }
 
+    @DeleteMapping("{postId}")
+    public ResponseEntity<ApiResponse<Long>> deletePost(@PathVariable Long postId, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
+
+        postService.deletePost(postId, userId);
+
+        return createApiResponseEntity(postId,SuccessCode.DELETE_SUCCESS);
+    }
+
     private <T> ResponseEntity<ApiResponse<T>> createApiResponseEntity(T result, SuccessCode successCode) {
         ApiResponse<T> apiResponse = ApiResponse.<T>builder()
                 .result(result)
@@ -54,4 +62,5 @@ public class PostApiController {
 
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
 }

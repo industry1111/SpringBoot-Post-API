@@ -58,6 +58,15 @@ public class PostService {
         return  post.getId();
     }
 
+    public void deletePost(Long postId, String userId) {
+
+        Post post = findPost(postId);
+
+        validatedUserId(post.getAuthor(), userId);
+
+        postRepository.delete(post);
+    }
+
     private void validatedUserId(String postUserId, String userId) {
 
         if (!postUserId.equals(userId)) {
