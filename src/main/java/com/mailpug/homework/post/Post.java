@@ -1,6 +1,7 @@
 package com.mailpug.homework.post;
 
 import com.mailpug.homework.common.entity.BaseEntity;
+import com.mailpug.homework.post.dto.request.UpdatePostDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,9 +34,9 @@ public class Post extends BaseEntity {
         this.author = author;
     }
 
-    public void updatePost(PostDto postDto) {
-        this.name = postDto.getName();
-        this.title = postDto.getTitle();
-        this.content = postDto.getContent();
+    public void updatePost(UpdatePostDto updatePostDto) {
+        this.name = updatePostDto.getName();
+        this.title = updatePostDto.getTitle();
+        this.content = updatePostDto.getContent();
     }
 }

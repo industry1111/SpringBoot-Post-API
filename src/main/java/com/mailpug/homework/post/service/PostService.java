@@ -5,7 +5,10 @@ import com.mailpug.homework.common.dto.PageRequestDto;
 import com.mailpug.homework.common.dto.PageResultDto;
 import com.mailpug.homework.config.exception.BusinessExceptionHandler;
 import com.mailpug.homework.post.Post;
-import com.mailpug.homework.post.PostDto;
+import com.mailpug.homework.post.dto.request.CreatePostDto;
+import com.mailpug.homework.post.dto.request.UpdatePostDto;
+import com.mailpug.homework.post.dto.response.ResponsePostDto;
+import com.mailpug.homework.post.dto.response.ResponsePostListDto;
 import com.mailpug.homework.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,7 +25,7 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public Long addPost(PostDto postDto, String userId) {
+    public Long addPost(CreatePostDto postDto, String userId) {
 
         Post post = Post.builder()
                 .name(postDto.getName())
@@ -36,11 +39,11 @@ public class PostService {
         return post.getId();
     }
 
-    public PostDto getPost(Long postId) {
+    public ResponsePostDto getPost(Long postId) {
 
         Post post = findPost(postId);
 
-        return PostDto.builder()
+        return ResponsePostDto.builder()
                 .id(post.getId())
                 .name(post.getName())
                 .title(post.getTitle())
@@ -53,13 +56,13 @@ public class PostService {
     }
 
     @Transactional
-    public Long modifyPost(PostDto postDto, String userId) {
+    public Long modifyPost(UpdatePostDto updatePostDto, String userId) {
 
-        Post post = findPost(postDto.getId());
+        Post post = findPost(updatePostDto.getId());
 
         validatedUserId(post.getAuthor(), userId);
 
-        post.updatePost(postDto);
+        post.updatePost(updatePostDto);
 
         postRepository.save(post);
 
@@ -76,11 +79,11 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public PageResultDto<PostDto> getPostList(PageRequestDto pageRequestDto) {
+    public PageResultDto<ResponsePostListDto> getPostList(PageRequestDto pageRequestDto) {
         String keyword = pageRequestDto.getKeyword();
         Pageable pageable = pageRequestDto.getPageable(Sort.by("id"));
 
-        Page<PostDto> result = postRepository.getPostList(keyword, pageable);
+        Page<ResponsePostListDto> result = postRepository.getPostList(keyword, pageable);
 
         return new PageResultDto<>(result);
     }

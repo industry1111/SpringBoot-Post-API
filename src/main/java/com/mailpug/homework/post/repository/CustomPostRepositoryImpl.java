@@ -1,11 +1,9 @@
 package com.mailpug.homework.post.repository;
 
-import com.mailpug.homework.post.Post;
-import com.mailpug.homework.post.PostDto;
 import com.mailpug.homework.post.QPost;
-import com.mailpug.homework.post.QPostDto;
+import com.mailpug.homework.post.dto.response.QResponsePostListDto;
+import com.mailpug.homework.post.dto.response.ResponsePostListDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,15 +20,13 @@ public class CustomPostRepositoryImpl implements CustomPostRepository{
     QPost post = QPost.post;
 
     @Override
-    public Page<PostDto> getPostList(String keyword, Pageable pageable) {
+    public Page<ResponsePostListDto> getPostList(String keyword, Pageable pageable) {
 
 
-        List<PostDto> result = queryFactory.select(
-                        new QPostDto(
+        List<ResponsePostListDto> result = queryFactory.select(
+                        new QResponsePostListDto(
                                 post.id,
-                                post.name,
                                 post.title,
-                                post.content,
                                 post.author,
                                 post.createAt,
                                 post.updateAt

@@ -4,10 +4,11 @@ import com.mailpug.homework.common.dto.PageRequestDto;
 import com.mailpug.homework.common.dto.PageResultDto;
 import com.mailpug.homework.config.exception.BusinessExceptionHandler;
 import com.mailpug.homework.post.Post;
-import com.mailpug.homework.post.dto.CreatePostDto;
-import com.mailpug.homework.post.dto.PostDto;
+import com.mailpug.homework.post.dto.request.CreatePostDto;
 
-import com.mailpug.homework.post.dto.UpdatePostDto;
+import com.mailpug.homework.post.dto.request.UpdatePostDto;
+import com.mailpug.homework.post.dto.response.ResponsePostDto;
+import com.mailpug.homework.post.dto.response.ResponsePostListDto;
 import com.mailpug.homework.post.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -75,7 +76,7 @@ class PostServiceTest {
                     .thenReturn(Optional.of(post));
 
             //when
-            PostDto findPostDto = postService.getPost(1L);
+            ResponsePostDto findPostDto = postService.getPost(1L);
 
             //then
             assertThat(findPostDto.getId()).isEqualTo(post.getId());
@@ -211,20 +212,18 @@ class PostServiceTest {
     void getPostsTest() {
         //given
         Pageable pageable = PageRequest.of(0,5, Sort.by("id"));
-        List<PostDto> postDtoList = new ArrayList<>();
+        List<ResponsePostListDto> responsePostDtoList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            PostDto postDto = PostDto.builder()
+            ResponsePostListDto responsePostDto = ResponsePostListDto.builder()
                     .id((long) i)
-                    .name("카테고리")
                     .title("게시글 제목")
-                    .content("게시글 내용")
                     .author("user1")
                     .build();
-            postDtoList.add(postDto);
+            responsePostDtoList.add(responsePostDto);
         }
 
         //모의 객체의 결과는 검색된 결과는 20건 , 현재 페이지는 0 사이즈는 5이므로 가져간 데이터는 5건
-        PageImpl<PostDto> expectedResult = new PageImpl<>(postDtoList, pageable, 20);
+        PageImpl<ResponsePostListDto> expectedResult = new PageImpl<>(responsePostDtoList, pageable, 20);
 
         when(postRepository.getPostList("카테고리", pageable))
                 .thenReturn(expectedResult);
@@ -237,7 +236,7 @@ class PostServiceTest {
 
 
         //when
-        PageResultDto<PostDto> result = postService.getPostList(pageRequestDto);
+        PageResultDto<ResponsePostListDto> result = postService.getPostList(pageRequestDto);
 
         //then
         assertThat(result.getTotalPage()).isEqualTo(4);

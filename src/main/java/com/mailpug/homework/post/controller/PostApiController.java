@@ -5,8 +5,10 @@ import com.mailpug.homework.common.dto.PageRequestDto;
 import com.mailpug.homework.common.dto.PageResultDto;
 import com.mailpug.homework.common.reponse.CustomApiResponse;
 import com.mailpug.homework.common.reponse.ErrorResponse;
-import com.mailpug.homework.post.dto.CreatePostDto;
-import com.mailpug.homework.post.dto.PostDto;
+import com.mailpug.homework.post.dto.request.CreatePostDto;
+import com.mailpug.homework.post.dto.request.UpdatePostDto;
+import com.mailpug.homework.post.dto.response.ResponsePostDto;
+import com.mailpug.homework.post.dto.response.ResponsePostListDto;
 import com.mailpug.homework.post.service.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -54,9 +56,9 @@ public class PostApiController {
      * @return ResponseEntity<ApiResponse<PostDto>>: 조회한 게시글 결과 및 응답 코드 반환
      */
     @GetMapping("/{postId}")
-    public ResponseEntity<CustomApiResponse<PostDto>> getPost(@PathVariable Long postId) {
+    public ResponseEntity<CustomApiResponse<ResponsePostDto>> getPost(@PathVariable Long postId) {
 
-        PostDto result = postService.getPost(postId);
+        ResponsePostDto result = postService.getPost(postId);
 
         return createApiResponseEntity(result, SuccessCode.SELECT_SUCCESS);
     }
@@ -67,13 +69,13 @@ public class PostApiController {
      * @return ResponseEntity<ApiResponse<PostDto>>: 수정된 게시글 번호 및 응답 코드 반환
      */
     @PatchMapping
-    public ResponseEntity<CustomApiResponse<Long>> modifyPost(@Valid @RequestBody PostDto postDto, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
+    public ResponseEntity<CustomApiResponse<Long>> modifyPost(@Valid @RequestBody UpdatePostDto updatePostDto, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
 
-        if (postDto.getId() == null) {
+        if (updatePostDto.getId() == null) {
             throw new IllegalArgumentException("게시글 번호는 필수 입니다.");
         }
 
-        Long result = postService.modifyPost(postDto, userId);
+        Long result = postService.modifyPost(updatePostDto, userId);
 
         return createApiResponseEntity(result, SuccessCode.UPDATE_SUCCESS);
     }
@@ -97,9 +99,9 @@ public class PostApiController {
      * @return ResponseEntity<ApiResponse<PostDto>>: 삭제된 게시글 번호 및 응답 코드 반환
      */
     @GetMapping
-    public ResponseEntity<CustomApiResponse<PageResultDto<PostDto>>> getPostList(@RequestBody PageRequestDto pageRequestDto) {
+    public ResponseEntity<CustomApiResponse<PageResultDto<ResponsePostListDto>>> getPostList(@RequestBody PageRequestDto pageRequestDto) {
 
-        PageResultDto<PostDto> result = postService.getPostList(pageRequestDto);
+        PageResultDto<ResponsePostListDto> result = postService.getPostList(pageRequestDto);
 
         return createApiResponseEntity(result,SuccessCode.SELECT_SUCCESS);
     }

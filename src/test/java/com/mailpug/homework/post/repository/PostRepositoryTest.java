@@ -2,7 +2,7 @@ package com.mailpug.homework.post.repository;
 
 import com.mailpug.homework.config.Appconfig;
 import com.mailpug.homework.post.Post;
-import com.mailpug.homework.post.dto.PostDto;
+import com.mailpug.homework.post.dto.response.ResponsePostListDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -86,7 +86,7 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(page, size);
 
             //when
-            Page<PostDto> result = postRepository.getPostList(keyword, pageable);
+            Page<ResponsePostListDto> result = postRepository.getPostList(keyword, pageable);
 
             //then
             assertThat(result.getSize()).isEqualTo(size);
@@ -114,13 +114,12 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(page, size);
 
             //when
-            Page<PostDto> result = postRepository.getPostList(keyword, pageable);
-            List<PostDto> postDtoList = result.getContent();
+            Page<ResponsePostListDto> result = postRepository.getPostList(keyword, pageable);
+            List<ResponsePostListDto> postDtoList = result.getContent();
 
             //then
             assertThat(result.getTotalPages()).isEqualTo(4);
             assertThat(postDtoList.size()).isEqualTo(size);
-            assertThat(postDtoList.get(0).getName()).isEqualTo("카테고리3");
         }
 
         @DisplayName("실패 - 등록된 게시글이 존재 하지 않음")
@@ -133,7 +132,7 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(page, size);
 
             //when
-            Page<PostDto> result = postRepository.getPostList(keyword, pageable);
+            Page<ResponsePostListDto> result = postRepository.getPostList(keyword, pageable);
 
             //then
             assertThat(result.getContent()).isEmpty();
@@ -161,7 +160,7 @@ class PostRepositoryTest {
             int size = 10;
             Pageable pageable = PageRequest.of(page, size);
 
-            Page<PostDto> result = postRepository.getPostList(keyword, pageable);
+            Page<ResponsePostListDto> result = postRepository.getPostList(keyword, pageable);
 
             //then
             assertThat(result.getContent()).isEmpty();
