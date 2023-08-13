@@ -1,6 +1,8 @@
 package com.mailpug.homework.post.controller;
 
 import com.mailpug.homework.common.codes.SuccessCode;
+import com.mailpug.homework.common.dto.PageRequestDto;
+import com.mailpug.homework.common.dto.PageResultDto;
 import com.mailpug.homework.common.reponse.ApiResponse;
 import com.mailpug.homework.post.PostDto;
 import com.mailpug.homework.post.service.PostService;
@@ -76,6 +78,26 @@ public class PostApiController {
 
         return createApiResponseEntity(postId,SuccessCode.DELETE_SUCCESS);
     }
+
+    /**
+     * [API] 게시글 조회
+     *
+     * @return ResponseEntity<ApiResponse<PostDto>>: 삭제된 게시글 번호 및 응답 코드 반환
+     */
+    @GetMapping
+    public ResponseEntity<ApiResponse<PageResultDto<PostDto>>> getPostList(@RequestBody PageRequestDto pageRequestDto) {
+
+        PageResultDto<PostDto> result = postService.getPostList(pageRequestDto);
+
+        return createApiResponseEntity(result,SuccessCode.SELECT_SUCCESS);
+    }
+
+
+    /**
+     * Service 에서 가져온 결과 값을 ResponseEntiTy<ApiResponse<T> 로 변환 해주는 메서드
+     *
+     * @return ResponseEntity<ApiResponse<T>>
+     */
 
     private <T> ResponseEntity<ApiResponse<T>> createApiResponseEntity(T result, SuccessCode successCode) {
         ApiResponse<T> apiResponse = ApiResponse.<T>builder()

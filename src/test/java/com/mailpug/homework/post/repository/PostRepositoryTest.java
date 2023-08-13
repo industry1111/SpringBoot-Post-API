@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -81,15 +83,15 @@ class PostRepositoryTest {
 
             String keyword = "카테고리0";
             int page = 0;
-            int size = 10;
+            int size = 5;
             Pageable pageable = PageRequest.of(page, size);
 
             //when
-            List<PostDto> result = postRepository.getPosts(keyword, pageable);
+            Page<PostDto> result = postRepository.getPostList(keyword, pageable);
 
             //then
-            assertThat(result.size()).isNotEqualTo(size);
-            assertThat(result.size()).isEqualTo(5);
+            assertThat(result.getSize()).isEqualTo(size);
+            assertThat(result.getTotalPages()).isEqualTo(1);
         }
 
         @DisplayName("성공 - 카테고리 미입력")
@@ -109,14 +111,17 @@ class PostRepositoryTest {
 
             String keyword = "";
             int page = 0;
-            int size = 10;
+            int size = 5;
             Pageable pageable = PageRequest.of(page, size);
 
             //when
-            List<PostDto> result = postRepository.getPosts(keyword, pageable);
+            Page<PostDto> result = postRepository.getPostList(keyword, pageable);
+            List<PostDto> postDtoList = result.getContent();
 
             //then
-            assertThat(result.size()).isEqualTo(size);
+            assertThat(result.getTotalPages()).isEqualTo(4);
+            assertThat(postDtoList.size()).isEqualTo(size);
+            assertThat(postDtoList.get(0).getCategory()).isEqualTo("카테고리3");
         }
 
         @DisplayName("실패 - 등록된 게시글이 존재 하지 않음")
@@ -129,10 +134,11 @@ class PostRepositoryTest {
             Pageable pageable = PageRequest.of(page, size);
 
             //when
-            List<PostDto> result = postRepository.getPosts(keyword, pageable);
+            Page<PostDto> result = postRepository.getPostList(keyword, pageable);
 
             //then
-            assertThat(result).isEmpty();
+            assertThat(result.getContent()).isEmpty();
+
         }
 
         @DisplayName("실패 - 해당 카테고리에는 게시글이 없음")
@@ -155,10 +161,11 @@ class PostRepositoryTest {
             int page = 0;
             int size = 10;
             Pageable pageable = PageRequest.of(page, size);
-            List<PostDto> result = postRepository.getPosts(keyword, pageable);
+
+            Page<PostDto> result = postRepository.getPostList(keyword, pageable);
 
             //then
-            assertThat(result).isEmpty();
+            assertThat(result.getContent()).isEmpty();
         }
     }
 }

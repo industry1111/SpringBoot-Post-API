@@ -2,6 +2,7 @@ package com.mailpug.homework.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mailpug.homework.common.codes.ErrorCode;
+import com.mailpug.homework.common.dto.PageRequestDto;
 import com.mailpug.homework.config.exception.BusinessExceptionHandler;
 import com.mailpug.homework.post.Post;
 import com.mailpug.homework.post.PostDto;
@@ -55,14 +56,14 @@ class PostApiControllerTest {
 
             String xUserId = "user1";
 
-            Post mockPost = Post.builder()
+            Post post = Post.builder()
                             .category("SpringBoot")
                             .title("게시글 생성")
                             .content("게시글내용")
                             .author(xUserId)
                             .build();
 
-            when(postService.addPost(any(PostDto.class), anyString())).thenReturn(mockPost.getId());
+            when(postService.addPost(any(PostDto.class), anyString())).thenReturn(post.getId());
 
             //when
             //then
@@ -238,6 +239,25 @@ class PostApiControllerTest {
                 .header("X-USERID", xUserId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultMsg").value("DELETE SUCCESS"));
+    }
+
+    @DisplayName("게시글 목록 조회")
+    @Test
+    void getPostList() throws Exception {
+        //given
+        PageRequestDto pageRequestDto = PageRequestDto.builder()
+                .page(0)
+                .size(10)
+                .keyword("카테고리")
+                .build();
+
+        //when
+        //then
+        mockMvc.perform(get("/posts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(pageRequestDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultMsg").value("SELECT SUCCESS"));
     }
 
 

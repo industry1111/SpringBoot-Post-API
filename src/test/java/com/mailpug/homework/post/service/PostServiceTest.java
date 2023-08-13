@@ -1,5 +1,7 @@
 package com.mailpug.homework.post.service;
 
+import com.mailpug.homework.common.dto.PageRequestDto;
+import com.mailpug.homework.common.dto.PageResultDto;
 import com.mailpug.homework.config.exception.BusinessExceptionHandler;
 import com.mailpug.homework.post.Post;
 import com.mailpug.homework.post.PostDto;
@@ -14,7 +16,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -197,6 +205,50 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.deletePost(1L, "user2"))
                 .isExactlyInstanceOf(BusinessExceptionHandler.class)
                 .hasMessage("권한이 없습니다.");
+
+    }
+
+    @DisplayName("게시글 목록조회")
+    @Test
+    void getPostsTest() {
+        //given
+        Pageable pageable = PageRequest.of(2,5, Sort.by("id"));
+        List<PostDto> postDtoList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            PostDto postDto = PostDto.builder()
+                    .id((long) i)
+                    .category("카테고리")
+                    .title("게시글 제목")
+                    .content("게시글 내용")
+                    .author("user1")
+                    .build();
+            postDtoList.add(postDto);
+        }
+
+        //모의 객체의 결과는 검색된 결과는 20건 , 현재 페이지는 0 사이즈는 5이므로 가져간 데이터는 5건
+        PageImpl<PostDto> expectedResult = new PageImpl<>(postDtoList, pageable, 20);
+
+        when(postRepository.getPostList("카테고리", pageable))
+                .thenReturn(expectedResult);
+
+        PageRequestDto pageRequestDto = PageRequestDto.builder()
+                    .page(2)
+                    .size(5)
+                    .keyword("카테고리")
+                    .build();
+
+
+        //when
+        PageResultDto<PostDto> result = postService.getPostList(pageRequestDto);
+
+        for (PostDto postDto : result.getDtoList()) {
+            System.out.println(postDto.getTitle());
+        }
+
+        //then
+        assertThat(result.getTotalPage()).isEqualTo(4);
+        assertThat(result.getStart()).isEqualTo(1);
+        assertThat(result.getEnd()).isEqualTo(4);
 
     }
 

@@ -1,15 +1,19 @@
 package com.mailpug.homework.post.service;
 
 import com.mailpug.homework.common.codes.ErrorCode;
+import com.mailpug.homework.common.dto.PageRequestDto;
+import com.mailpug.homework.common.dto.PageResultDto;
 import com.mailpug.homework.config.exception.BusinessExceptionHandler;
 import com.mailpug.homework.post.Post;
 import com.mailpug.homework.post.PostDto;
 import com.mailpug.homework.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,9 +46,13 @@ public class PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .author(post.getCategory())
+                .createAt(post.getCreateAt())
+                .updateAt(post.getUpdateAt())
                 .build();
+
     }
 
+    @Transactional
     public Long modifyPost(PostDto postDto, String userId) {
 
         Post post = findPost(postDto.getId());
@@ -58,6 +66,7 @@ public class PostService {
         return  post.getId();
     }
 
+    @Transactional
     public void deletePost(Long postId, String userId) {
 
         Post post = findPost(postId);
@@ -66,6 +75,16 @@ public class PostService {
 
         postRepository.delete(post);
     }
+
+    public PageResultDto<PostDto> getPostList(PageRequestDto pageRequestDto) {
+        String keyword = pageRequestDto.getKeyword();
+        Pageable pageable = pageRequestDto.getPageable(Sort.by("id"));
+
+        Page<PostDto> result = postRepository.getPostList(keyword, pageable);
+
+        return new PageResultDto<>(result);
+    }
+
 
     private void validatedUserId(String postUserId, String userId) {
 
