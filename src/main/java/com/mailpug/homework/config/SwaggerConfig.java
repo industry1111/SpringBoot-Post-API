@@ -26,9 +26,13 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
+
+        String description = "SpringBoot를 사용한 CRUD API 입니다.\n"
+                + "[프로젝트 소개](https://github.com/industry1111/SpringBoot-Post-API/blob/main/README.md)";
+        
         return new ApiInfoBuilder()
                 .title("게시판 API")
-                .description("SpringBoot를 사용한 CRUD API 입니다.\n" + "[프로젝트 소개](https://github.com/industry1111/SpringBoot-Post-API/blob/main/README.md)")
+                .description(description)
                 .version("1.0")
                 .build();
     }

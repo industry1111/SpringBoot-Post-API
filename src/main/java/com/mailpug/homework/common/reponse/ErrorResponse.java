@@ -1,6 +1,7 @@
 package com.mailpug.homework.common.reponse;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 /**
  * [공통] API Error Response 결과의 반환 값을 관리
  */
+@ApiModel(description = "ErrorResponse")
 @Schema(description = "Error 발생시 응답 값")
 @Data
 public class ErrorResponse {
