@@ -4,7 +4,6 @@ import com.mailpug.homework.common.codes.SuccessCode;
 import com.mailpug.homework.common.dto.PageRequestDto;
 import com.mailpug.homework.common.dto.PageResultDto;
 import com.mailpug.homework.common.reponse.CustomApiResponse;
-import com.mailpug.homework.common.reponse.ErrorResponse;
 import com.mailpug.homework.post.dto.request.CreatePostDto;
 import com.mailpug.homework.post.dto.request.UpdatePostDto;
 import com.mailpug.homework.post.dto.response.ResponsePostDto;
@@ -12,12 +11,8 @@ import com.mailpug.homework.post.dto.response.ResponsePostListDto;
 import com.mailpug.homework.post.service.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +34,7 @@ public class PostApiController {
      *
      * @return ResponseEntity<Object>: 생성된 게시글 번호 및 응답 코드 반환
      */
-    @Operation(summary = "게시글 등록", description = "게시글을 등록 합니다.")
+    @Operation(summary = "게시글 등록", description = "게시글을 등록 합니다.\n + X-USERID는 3~10자 사이여야 합니다.")
     @ApiResponse(code = 201, message ="INSERT SUCCESS")
     @PostMapping
     public CustomApiResponse<Long> addPost(@Valid @RequestBody CreatePostDto createPostDto, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
@@ -72,7 +67,7 @@ public class PostApiController {
      * @return RResponseEntity<Object>: 수정된 게시글 번호 및 응답 코드 반환
      */
 
-    @Operation(summary = "게시글 수정", description = "해당 게시글에 대한 정보를 수정합니다..")
+    @Operation(summary = "게시글 수정", description = "해당 게시글에 대한 정보를 수정합니다.\n + X-USERID는 3~10자 사이여야 합니다.")
     @ApiResponse(code = 200, message ="INSERT SUCCESS")
     @PatchMapping
     public CustomApiResponse<Long> modifyPost(@Valid @RequestBody UpdatePostDto updatePostDto, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
@@ -91,7 +86,7 @@ public class PostApiController {
      *
      * @return ResponseEntity<ApiResponse<PostDto>>: 삭제된 게시글 번호 및 응답 코드 반환
      */
-    @Operation(summary = "게시글 삭제", description = "해당 게시글을 삭제합니다.")
+    @Operation(summary = "게시글 삭제", description = "해당 게시글을 삭제합니다.\n + X-USERID는 3~10자 사이여야 합니다.")
     @ApiResponse(code = 204, message ="INSERT SUCCESS")
     @DeleteMapping("{postId}")
     public CustomApiResponse<Long> deletePost(@PathVariable Long postId, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
