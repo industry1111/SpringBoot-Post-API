@@ -115,7 +115,7 @@ project-root/
 
 1. 프로젝트 압출을 풀어줍니다.
 2. 터미널/명령프롬프트을 열고 프로젝트 루트 디렉토리로 이동합니다.
-3. 다음 명령을 실행하여 프로젝트를 빌드 및 실행 합니다.
+3. 다음 명령을 실행하여 프로젝트를 빌드 및 실행 합니다. 해당 경로에서 bootrun.log 파일을 열면 실시간 에러 로그를 확인할 수 있습니다.
 #### Mac
    ```bash
    $ ./gradlew build
@@ -128,10 +128,13 @@ project-root/
 
     gradlew.bat bootRun > bootrun.log 2>&1
   ```
+4. EXCUTING이 나오면 서버가 성공적으로 실행된 상태입니다.
+ <img height="100" src="https://github.com/industry1111/SpringBoot-Post-API/assets/98158673/19ea0d90-b7bf-4f76-8ed8-fbebe78289c8">
 
-4. 서버가 성공적으로 실행되면 [API DOC](http://localhost:8080/swagger-ui/index.html) Swagger API 문서를 통해 테스트를 진행 할 수 있습니다.
 
-5. Try Out 버튼을 클릭 -> 양식에 맞는 데이터 입력 -> Excute 버튼 클릭
+5.  [API DOC](http://localhost:8080/swagger-ui/index.html) Swagger API 문서를 통해 테스트를 진행 할 수 있습니다.
+
+6. Try Out 버튼을 클릭 -> 양식에 맞는 데이터 입력 -> Excute 버튼 클릭
    <img height="700" src="https://github.com/industry1111/SpringBoot-Post-API/assets/98158673/92a69dc5-f5af-4523-bf02-29270d798b5e">
 
 ## 기타 부가 설명
