@@ -142,9 +142,11 @@ class PostApiControllerTest {
         @Test
         void postTitleIsEmpty() throws Exception{
             //given
+            String title = "게시글제목";
+            title = title.repeat(21);
             CreatePostDto postDto = CreatePostDto.builder()
                     .name("SpringBoot")
-                    .title("")
+                    .title(title)
                     .content("게시글내용")
                     .build();
 
@@ -289,17 +291,12 @@ class PostApiControllerTest {
     @Test
     void getPostList() throws Exception {
         //given
-        PageRequestDto pageRequestDto = PageRequestDto.builder()
-                .page(0)
-                .size(10)
-                .keyword("카테고리")
-                .build();
+        String param = "page=1&size=5&keyword='카테고리'";
 
         //when
         //then
-        mockMvc.perform(get("/posts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(pageRequestDto)))
+        mockMvc.perform(get("/posts?"+param)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultMsg").value("SELECT SUCCESS"));
     }

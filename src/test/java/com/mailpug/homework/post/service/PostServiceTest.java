@@ -91,7 +91,7 @@ class PostServiceTest {
             //then
             assertThatThrownBy(() -> postService.getPost(1L))
                     .isExactlyInstanceOf(BusinessExceptionHandler.class)
-                    .hasMessage("존재하지 않는 게시글 번호 입니다.");
+                    .hasMessage("데이터가 존재하지 않습니다.");
         }
     }
 
@@ -180,7 +180,7 @@ class PostServiceTest {
             //then
             assertThatThrownBy(() -> postService.modifyPost(postDto,"user1"))
                     .isExactlyInstanceOf(BusinessExceptionHandler.class)
-                    .hasMessage("존재하지 않는 게시글 번호 입니다.");
+                    .hasMessage("데이터가 존재하지 않습니다.");
         }
     }
 
@@ -207,42 +207,72 @@ class PostServiceTest {
                 .hasMessage("권한이 없습니다.");
     }
 
+    @Nested
     @DisplayName("게시글 목록조회")
-    @Test
-    void getPostsTest() {
-        //given
-        Pageable pageable = PageRequest.of(0,5, Sort.by("id"));
-        List<ResponsePostListDto> responsePostDtoList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            ResponsePostListDto responsePostDto = ResponsePostListDto.builder()
-                    .id((long) i)
-                    .title("게시글 제목")
-                    .author("user1")
-                    .build();
-            responsePostDtoList.add(responsePostDto);
-        }
+    class getPostListTest {
 
-        //모의 객체의 결과는 검색된 결과는 20건 , 현재 페이지는 0 사이즈는 5이므로 가져간 데이터는 5건
-        PageImpl<ResponsePostListDto> expectedResult = new PageImpl<>(responsePostDtoList, pageable, 20);
+        @DisplayName("성공")
+        @Test
+        void success() {
+            //given
+            Pageable pageable = PageRequest.of(0,5, Sort.by("id"));
+            List<ResponsePostListDto> responsePostDtoList = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                ResponsePostListDto responsePostDto = ResponsePostListDto.builder()
+                        .id((long) i)
+                        .title("게시글 제목")
+                        .author("user1")
+                        .build();
+                responsePostDtoList.add(responsePostDto);
+            }
 
-        when(postRepository.getPostList("카테고리", pageable))
-                .thenReturn(expectedResult);
 
-        PageRequestDto pageRequestDto = PageRequestDto.builder()
+
+            //모의 객체의 결과는 검색된 결과는 20건 , 현재 페이지는 0 사이즈는 5이므로 가져간 데이터는 5건
+            PageImpl<ResponsePostListDto> expectedResult = new PageImpl<>(responsePostDtoList, pageable, 20);
+
+            when(postRepository.getPostList("카테고리", pageable))
+                    .thenReturn(expectedResult);
+
+            //when
+            PageRequestDto pageRequestDto = PageRequestDto.builder()
                     .page(1)
                     .size(5)
                     .keyword("카테고리")
                     .build();
 
+            PageResultDto<ResponsePostListDto> result = postService.getPostList(pageRequestDto);
 
-        //when
-        PageResultDto<ResponsePostListDto> result = postService.getPostList(pageRequestDto);
+            //then
+            assertThat(result.getTotalPage()).isEqualTo(4);
+            assertThat(result.getStart()).isEqualTo(1);
+            assertThat(result.getEnd()).isEqualTo(4);
 
-        //then
-        assertThat(result.getTotalPage()).isEqualTo(4);
-        assertThat(result.getStart()).isEqualTo(1);
-        assertThat(result.getEnd()).isEqualTo(4);
+        }
+
+        @DisplayName("실페 - 데이터 없음")
+        @Test
+        void noMatchesFound() {
+            Pageable pageable = PageRequest.of(0,5, Sort.by("id"));
+
+            PageRequestDto pageRequestDto = PageRequestDto.builder()
+                    .page(1)
+                    .size(5)
+                    .keyword("카테고리")
+                    .build();
+
+            when(postRepository.getPostList("카테고리", pageable))
+                    .thenReturn(new PageImpl<>(new ArrayList<>(),pageable,0));
+
+            //when
+
+            //then
+            assertThatThrownBy(() -> postService.getPostList(pageRequestDto))
+                    .isExactlyInstanceOf(BusinessExceptionHandler.class)
+                    .hasMessage("데이터가 존재하지 않습니다.");
+        }
 
     }
+
 
 }

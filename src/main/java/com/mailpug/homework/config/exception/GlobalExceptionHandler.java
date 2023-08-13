@@ -10,6 +10,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
@@ -41,11 +42,8 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toList())
                 .get(0);
 
-        final ErrorResponse response = ErrorResponse.builder()
-                .status(errorCode.getValue())
-                .error(errorCode.getStatus())
-                .message(message)
-                .build();
+        final ErrorResponse response = getErrorResponse (errorCode,message);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -64,11 +62,9 @@ public class GlobalExceptionHandler {
 
         ErrorCode errorCode = ErrorCode.INVALID_INPUT_HEADER;
 
-        final ErrorResponse response = ErrorResponse.builder()
-                .status(errorCode.getValue())
-                .error(errorCode.getStatus())
-                .message(headerName + errorCode.getMessage())
-                .build();
+        String message = headerName + errorCode.getMessage();
+
+        final ErrorResponse response = getErrorResponse (errorCode,message);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -99,11 +95,7 @@ public class GlobalExceptionHandler {
             message = "X-UERID는 3자에서 10자 사이여야 합니다.";
         }
 
-        final ErrorResponse response = ErrorResponse.builder()
-                .status(errorCode.getValue())
-                .error(errorCode.getStatus())
-                .message(message)
-                .build();
+        final ErrorResponse response = getErrorResponse (errorCode,message);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -121,13 +113,33 @@ public class GlobalExceptionHandler {
 
         String message = ex.getMessage();
 
-        final ErrorResponse response = ErrorResponse.builder()
-                .status(ErrorCode.NULL_POINT_ERROR.getValue())
-                .error(ErrorCode.NULL_POINT_ERROR.getStatus())
-                .message(message)
-                .build();
+        ErrorCode errorCode = ErrorCode.NULL_POINT_ERROR;
+
+        final ErrorResponse response = getErrorResponse (errorCode,message);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    /**
+     * [Exception] API 호출 시 누락된 값이 있을 경우
+     *
+     * @param ex IllegalArgumentException
+     * @return ResponseEntity<ErrorResponse>
+     */
+    @ExceptionHandler(NoResultException.class)
+    public ResponseEntity<ErrorResponse> handleNoResultException(NoResultException ex) {
+
+        log.error("NoResultException", ex);
+
+        ErrorCode errorCode = ErrorCode.NO_MATCHES_FOUND;
+
+        String message = errorCode.getMessage();
+
+        final ErrorResponse response = getErrorResponse (errorCode,message);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     /**
      * [Exception] 비즈니스로직에서 에서 발생한 에러
@@ -147,12 +159,25 @@ public class GlobalExceptionHandler {
             message = errorCode.getMessage();
         }
 
-        final ErrorResponse response = ErrorResponse.builder()
+        final ErrorResponse response = getErrorResponse (errorCode,message);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    /**
+     *  ErrorResponse 로 반환해 주는 메서드
+     *
+     * @param errorCode ErrorCode
+     * @param message String
+     *
+     * @return ErrorResponse
+     */
+    private ErrorResponse getErrorResponse(ErrorCode errorCode, String message) {
+
+        return ErrorResponse.builder()
                 .status(errorCode.getValue())
                 .error(errorCode.getStatus())
                 .message(message)
                 .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
