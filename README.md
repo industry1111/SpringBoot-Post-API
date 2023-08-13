@@ -120,13 +120,13 @@ project-root/
    ```bash
    $ ./gradlew build
 
-   $ ./gradlew bootRun
+   $ ./gradlew bootRun > bootrun.log 2>&1
    ```
 #### Window
   ```
     gradlew.bat build
 
-    gradlew.bat bootRun
+    gradlew.bat bootRun > bootrun.log 2>&1
   ```
 
 4. 서버가 성공적으로 실행되면 [API DOC](http://localhost:8080/swagger-ui/index.html) Swagger API 문서를 통해 테스트를 진행 할 수 있습니다.
@@ -135,6 +135,6 @@ project-root/
    <img height="700" src="https://github.com/industry1111/SpringBoot-Post-API/assets/98158673/92a69dc5-f5af-4523-bf02-29270d798b5e">
 
 ## 기타 부가 설명
-
 - 제출된 프로젝트의 경우 H2 (메모리) 데이터베이스이기 때문에 별도의 데이터베이스 설정은 필요없습니다.
+- Header의 `X-USERID`는 3~10 자 사이여야 합니다.
 - [개발 진행 과정](https://velog.io/@industry1111/SpringBoot를-사용한-게시판-API-만들기01)
