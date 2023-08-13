@@ -28,7 +28,7 @@ public class CustomPostRepositoryImpl implements CustomPostRepository{
         List<PostDto> result = queryFactory.select(
                         new QPostDto(
                                 post.id,
-                                post.category,
+                                post.name,
                                 post.title,
                                 post.content,
                                 post.author,
@@ -58,6 +58,6 @@ public class CustomPostRepositoryImpl implements CustomPostRepository{
     //category null,isEmpty 검사
     private BooleanExpression postNameEq(String keyword) {
 
-        return keyword != null && !keyword.isEmpty() ? post.category.eq(keyword) : null;
+        return keyword != null && !keyword.isEmpty() ? post.name.eq(keyword) : null;
     }
 }

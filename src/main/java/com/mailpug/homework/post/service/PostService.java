@@ -25,7 +25,7 @@ public class PostService {
     public Long addPost(PostDto postDto, String userId) {
 
         Post post = Post.builder()
-                .category(postDto.getCategory())
+                .name(postDto.getName())
                 .title(postDto.getTitle())
                 .content(postDto.getContent())
                 .author(userId)
@@ -42,10 +42,10 @@ public class PostService {
 
         return PostDto.builder()
                 .id(post.getId())
-                .category(post.getCategory())
+                .name(post.getName())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .author(post.getCategory())
+                .author(post.getName())
                 .createAt(post.getCreateAt())
                 .updateAt(post.getUpdateAt())
                 .build();

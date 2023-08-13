@@ -4,6 +4,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
@@ -15,8 +16,10 @@ public class PostDto {
 
     private Long id;
 
-    private String category;
+    @NotBlank(message = "게시글의 카테고리는 필수 값 입니다.")
+    private String name;
 
+    @NotBlank(message = "게시글의 제목은 필수 값 입니다.")
     @Length(min = 1, max = 100, message = "게시글 제목은 1~100자 사이로 작성해 주세요.")
     private String title;
 
@@ -29,9 +32,9 @@ public class PostDto {
 
     @Builder
     @QueryProjection
-    public PostDto(Long id, String category, String title, String content, String author, LocalDateTime createAt, LocalDateTime updateAt) {
+    public PostDto(Long id, String name, String title, String content, String author, LocalDateTime createAt, LocalDateTime updateAt) {
         this.id = id;
-        this.category = category;
+        this.name = name;
         this.title = title;
         this.content = content;
         this.author = author;

@@ -49,7 +49,7 @@ class PostApiControllerTest {
         void success() throws Exception {
             //given
             PostDto postDto = PostDto.builder()
-                    .category("SpringBoot")
+                    .name("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글내용")
                     .build();
@@ -57,7 +57,7 @@ class PostApiControllerTest {
             String xUserId = "user1";
 
             Post post = Post.builder()
-                            .category("SpringBoot")
+                            .name("SpringBoot")
                             .title("게시글 생성")
                             .content("게시글내용")
                             .author(xUserId)
@@ -80,7 +80,7 @@ class PostApiControllerTest {
         void xUserIdIsNull() throws Exception {
             //given
             PostDto postDto = PostDto.builder()
-                    .category("SpringBoot")
+                    .name("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글내용")
                     .build();
@@ -99,7 +99,7 @@ class PostApiControllerTest {
         void xUserIdInvalid() throws Exception{
             //given
             PostDto postDto = PostDto.builder()
-                    .category("SpringBoot")
+                    .name("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글내용")
                     .build();
@@ -116,12 +116,33 @@ class PostApiControllerTest {
                     .andExpect(jsonPath("$.message").value("X-UERID는 3자에서 10자 사이여야 합니다."));
         }
 
-        @DisplayName("실패 - 게시글 제목 null")
+        @DisplayName("실패 - 게시글 카테고리 null")
         @Test
-        void postTitleIsNull() throws Exception{
+        void postNameIsNull() throws Exception{
             //given
             PostDto postDto = PostDto.builder()
-                    .category("SpringBoot")
+                    .title("게시글 제목")
+                    .content("게시글내용")
+                    .build();
+
+            String xUserId = "user1";
+
+            //when
+            //then
+            mockMvc.perform(post("/posts")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(postDto))
+                            .header("X-USERID", xUserId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("게시글의 카테고리는 필수 값 입니다."));
+        }
+
+        @DisplayName("실패 - 게시글 제목 길이")
+        @Test
+        void postTitleIsEmpty() throws Exception{
+            //given
+            PostDto postDto = PostDto.builder()
+                    .name("SpringBoot")
                     .title("")
                     .content("게시글내용")
                     .build();
@@ -138,6 +159,27 @@ class PostApiControllerTest {
                     .andExpect(jsonPath("$.message").value("게시글 제목은 1~100자 사이로 작성해 주세요."));
         }
 
+        @DisplayName("실패 - 게시글 제목 길이")
+        @Test
+        void postTitleIsNull() throws Exception{
+            //given
+            PostDto postDto = PostDto.builder()
+                    .name("SpringBoot")
+                    .content("게시글내용")
+                    .build();
+
+            String xUserId = "user1";
+
+            //when
+            //then
+            mockMvc.perform(post("/posts")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(postDto))
+                            .header("X-USERID", xUserId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.message").value("게시글의 제목은 필수 값 입니다."));
+        }
+
     }
 
     @Nested
@@ -151,7 +193,7 @@ class PostApiControllerTest {
             String modifiedText = "텍스트 수정";
             PostDto updatePostDto = PostDto.builder()
                     .id(1L)
-                    .category("Spring")
+                    .name("Spring")
                     .title("타이틀 변경")
                     .content(modifiedText)
                     .build();
@@ -177,7 +219,7 @@ class PostApiControllerTest {
             //given
 
             PostDto updatePostDto = PostDto.builder()
-                    .category("SpringBoot")
+                    .name("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글 내용")
                     .build();
@@ -196,7 +238,7 @@ class PostApiControllerTest {
         void mismatchXUerId() throws Exception{
             //given
             Post post = Post.builder()
-                    .category("SpringBoot")
+                    .name("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글 내용")
                     .author("user1")
@@ -204,7 +246,7 @@ class PostApiControllerTest {
 
             PostDto updatePostDto = PostDto.builder()
                     .id(1L)
-                    .category("SpringBoot")
+                    .name("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글 내용")
                     .build();

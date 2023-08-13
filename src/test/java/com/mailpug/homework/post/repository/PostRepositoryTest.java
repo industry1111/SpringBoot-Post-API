@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ class PostRepositoryTest {
         void success() {
             //given
             Post post = Post.builder()
-                    .category("SpringBoot")
+                    .name("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글내용")
                     .author("user1")
@@ -72,7 +71,7 @@ class PostRepositoryTest {
             //given
             for (int i = 0; i < 20; i++) {
                 Post post = Post.builder()
-                        .category("카테고리" +i/5)
+                        .name("카테고리" +i/5)
                         .title("게시글 생성"+i)
                         .content("게시글내용"+i)
                         .author("user")
@@ -96,11 +95,11 @@ class PostRepositoryTest {
 
         @DisplayName("성공 - 카테고리 미입력")
         @Test
-        void successCategoryIsEmpty() {
+        void successnameIsEmpty() {
             //given
             for (int i = 0; i < 20; i++) {
                 Post post = Post.builder()
-                        .category("카테고리" +i/5)
+                        .name("카테고리" +i/5)
                         .title("게시글 생성"+i)
                         .content("게시글내용"+i)
                         .author("user")
@@ -121,7 +120,7 @@ class PostRepositoryTest {
             //then
             assertThat(result.getTotalPages()).isEqualTo(4);
             assertThat(postDtoList.size()).isEqualTo(size);
-            assertThat(postDtoList.get(0).getCategory()).isEqualTo("카테고리3");
+            assertThat(postDtoList.get(0).getName()).isEqualTo("카테고리3");
         }
 
         @DisplayName("실패 - 등록된 게시글이 존재 하지 않음")
@@ -143,11 +142,11 @@ class PostRepositoryTest {
 
         @DisplayName("실패 - 해당 카테고리에는 게시글이 없음")
         @Test
-        void invalidCategory() {
+        void invalidname() {
             //given
             for (int i = 0; i < 20; i++) {
                 Post post = Post.builder()
-                        .category("카테고리" +i/5)
+                        .name("카테고리" +i/5)
                         .title("게시글 생성"+i)
                         .content("게시글내용"+i)
                         .author("user")

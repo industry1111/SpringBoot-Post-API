@@ -2,11 +2,8 @@ package com.mailpug.homework.post;
 
 import com.mailpug.homework.common.entity.BaseEntity;
 import lombok.*;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Entity
 @Getter
@@ -18,7 +15,7 @@ public class Post extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String category;
+    private String name;
 
     private String title;
 
@@ -29,15 +26,15 @@ public class Post extends BaseEntity {
     private String author;
 
     @Builder
-    public Post(String category, String title, String content, String author) {
-        this.category = category;
+    public Post(String name, String title, String content, String author) {
+        this.name = name;
         this.title = title;
         this.content = content;
         this.author = author;
     }
 
     public void updatePost(PostDto postDto) {
-        this.category = postDto.getCategory();
+        this.name = postDto.getName();
         this.title = postDto.getTitle();
         this.content = postDto.getContent();
     }

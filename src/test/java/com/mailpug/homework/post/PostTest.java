@@ -14,7 +14,7 @@ class PostTest {
 
         //given
         Post post = Post.builder()
-                .category("SpringBoot")
+                .name("SpringBoot")
                 .title("게시글 생성")
                 .content("게시글내용")
                 .author("user1")
@@ -22,7 +22,7 @@ class PostTest {
 
         //when
         PostDto updatePostDto = PostDto.builder()
-                .category("Spring")
+                .name("Spring")
                 .title("게시글 수정")
                 .content("게시글 내용 수정")
                 .build();

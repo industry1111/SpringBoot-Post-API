@@ -46,7 +46,7 @@ class PostServiceTest {
         //given
         String userId = "user1";
         PostDto postDto = PostDto.builder()
-                .category("JAVA")
+                .name("JAVA")
                 .title("게시글 제목")
                 .content("게시글 내용")
                 .build();
@@ -64,7 +64,7 @@ class PostServiceTest {
         void success() {
             //given
             Post post = Post.builder()
-                    .category("category")
+                    .name("name")
                     .title("title")
                     .content("content")
                     .author("user1")
@@ -101,7 +101,7 @@ class PostServiceTest {
         void success() {
             //given
             Post post = Post.builder()
-                    .category("category")
+                    .name("name")
                     .title("title")
                     .content("content")
                     .author("user1")
@@ -110,7 +110,7 @@ class PostServiceTest {
             String modifiedText = "내용 수정";
             PostDto postDto = PostDto.builder()
                     .id(1L)
-                    .category("Junit")
+                    .name("Junit")
                     .title("수정된 제목")
                     .content(modifiedText)
                     .author("user1")
@@ -131,7 +131,7 @@ class PostServiceTest {
         void forbiddenFail() {
             //given
             Post post = Post.builder()
-                    .category("category")
+                    .name("name")
                     .title("title")
                     .content("content")
                     .author("user1")
@@ -140,7 +140,7 @@ class PostServiceTest {
             String modifiedText = "내용 수정";
             PostDto postDto = PostDto.builder()
                     .id(1L)
-                    .category("Junit")
+                    .name("Junit")
                     .title("수정된 제목")
                     .content(modifiedText)
                     .author("user1")
@@ -161,7 +161,7 @@ class PostServiceTest {
         void notFoundPost() {
             //given
             Post post = Post.builder()
-                    .category("category")
+                    .name("name")
                     .title("title")
                     .content("content")
                     .author("user1")
@@ -170,7 +170,7 @@ class PostServiceTest {
             String modifiedText = "내용 수정";
             PostDto postDto = PostDto.builder()
                     .id(2L)
-                    .category("Junit")
+                    .name("Junit")
                     .title("수정된 제목")
                     .content(modifiedText)
                     .author("user1")
@@ -190,7 +190,7 @@ class PostServiceTest {
     void deletePost() {
         //given
         Post post = Post.builder()
-                .category("java")
+                .name("java")
                 .title("게시글 제목")
                 .content("게시글 내용")
                 .author("user1")
@@ -205,7 +205,6 @@ class PostServiceTest {
         assertThatThrownBy(() -> postService.deletePost(1L, "user2"))
                 .isExactlyInstanceOf(BusinessExceptionHandler.class)
                 .hasMessage("권한이 없습니다.");
-
     }
 
     @DisplayName("게시글 목록조회")
@@ -217,7 +216,7 @@ class PostServiceTest {
         for (int i = 0; i < 5; i++) {
             PostDto postDto = PostDto.builder()
                     .id((long) i)
-                    .category("카테고리")
+                    .name("카테고리")
                     .title("게시글 제목")
                     .content("게시글 내용")
                     .author("user1")
@@ -240,10 +239,6 @@ class PostServiceTest {
 
         //when
         PageResultDto<PostDto> result = postService.getPostList(pageRequestDto);
-
-        for (PostDto postDto : result.getDtoList()) {
-            System.out.println(postDto.getTitle());
-        }
 
         //then
         assertThat(result.getTotalPage()).isEqualTo(4);
