@@ -91,7 +91,7 @@ class PostApiControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(postDto)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.error").value("X-USERID 는 필수 입니다."));
+                    .andExpect(jsonPath("$.message").value("X-USERID 값은 필수 입니다."));
         }
 
         @DisplayName("실패 - X-USERID 유효성")
@@ -113,7 +113,7 @@ class PostApiControllerTest {
                             .content(objectMapper.writeValueAsString(postDto))
                             .header("X-USERID", xUserId))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.error").value("X-UERID는 3자에서 10자 사이여야 합니다."));
+                    .andExpect(jsonPath("$.message").value("X-UERID는 3자에서 10자 사이여야 합니다."));
         }
 
         @DisplayName("실패 - 게시글 제목 null")
@@ -135,7 +135,7 @@ class PostApiControllerTest {
                             .content(objectMapper.writeValueAsString(postDto))
                             .header("X-USERID", xUserId))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.error").value("게시글 제목은 1~100자 사이로 작성해 주세요."));
+                    .andExpect(jsonPath("$.message").value("게시글 제목은 1~100자 사이로 작성해 주세요."));
         }
 
     }

@@ -212,7 +212,7 @@ class PostServiceTest {
     @Test
     void getPostsTest() {
         //given
-        Pageable pageable = PageRequest.of(2,5, Sort.by("id"));
+        Pageable pageable = PageRequest.of(0,5, Sort.by("id"));
         List<PostDto> postDtoList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             PostDto postDto = PostDto.builder()
@@ -232,7 +232,7 @@ class PostServiceTest {
                 .thenReturn(expectedResult);
 
         PageRequestDto pageRequestDto = PageRequestDto.builder()
-                    .page(2)
+                    .page(1)
                     .size(5)
                     .keyword("카테고리")
                     .build();

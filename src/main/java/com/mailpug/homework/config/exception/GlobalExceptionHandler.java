@@ -10,6 +10,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -28,51 +29,62 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity<responseBody, HttpStatus>
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
 
         log.error("MethodArgumentNotValidException", ex);
 
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("timestamp", new Date());
-        responseBody.put("status", HttpStatus.BAD_REQUEST.value());
+        ErrorCode errorCode = ErrorCode.BAD_REQUEST;
 
-        List<String> errors = ex.getBindingResult().getFieldErrors()
+        String message = ex.getBindingResult().getFieldErrors()
                 .stream()
                 .map(x -> x.getDefaultMessage())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+                .get(0);
 
-        responseBody.put("error", errors.get(0));
-
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        final ErrorResponse response = ErrorResponse.builder()
+                .status(errorCode.getValue())
+                .error(errorCode.getStatus())
+                .message(message)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
-     * [Exception] API 호출 시 'Header' 내에  X-USERID 필드 누락
+     * [Exception] API 호출 시 'Header' 내에  누락된 필드가 존재할 경우
      *
      * @param ex MissingRequestHeaderException
      * @return ResponseEntity<ErrorResponse>
      */
     @ExceptionHandler(MissingRequestHeaderException.class)
-    protected ResponseEntity<Object> handleMissingRequestHeaderException(MissingRequestHeaderException ex) {
+    protected ResponseEntity<ErrorResponse> handleMissingRequestHeaderException(MissingRequestHeaderException ex) {
+
         log.error("MissingRequestHeaderException", ex);
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("timestamp", new Date());
-        responseBody.put("status", HttpStatus.BAD_REQUEST.value());
 
-        responseBody.put("error", "X-USERID 는 필수 입니다.");
+        String headerName = ex.getHeaderName();
 
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        ErrorCode errorCode = ErrorCode.INVALID_INPUT_HEADER;
+
+        final ErrorResponse response = ErrorResponse.builder()
+                .status(errorCode.getValue())
+                .error(errorCode.getStatus())
+                .message(headerName + errorCode.getMessage())
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
-     * [Exception] API 호출 시 'Header' 내에  X-USERID 유효하지 않은 경우
+     * [Exception] API 호출 시 'Header' 내에  유효하지 않은 필드가 있을 경우
      *
      * @param ex MissingRequestHeaderException
      * @return ResponseEntity<ErrorResponse>
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    protected ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
+    protected ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+
         log.error("ConstraintViolationException", ex);
+
+        ErrorCode errorCode = ErrorCode.INVALID_INPUT_HEADER;
 
         //propertyPath 값 가져오기
         String property = ex.getConstraintViolations()
@@ -81,28 +93,52 @@ public class GlobalExceptionHandler {
                 .findFirst()  // 첫 번째 프로퍼티 경로만 사용
                 .orElse("");
 
-        String error = "";
+        String message = ex.getMessage();
 
         if (property.equals("addPost.userId")) {
-            error = "X-UERID는 3자에서 10자 사이여야 합니다.";
+            message = "X-UERID는 3자에서 10자 사이여야 합니다.";
         }
 
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-        responseBody.put("timestamp", new Date());
-        responseBody.put("status", HttpStatus.BAD_REQUEST.value());
-        responseBody.put("error", error);
+        final ErrorResponse response = ErrorResponse.builder()
+                .status(errorCode.getValue())
+                .error(errorCode.getStatus())
+                .message(message)
+                .build();
 
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    /**
+     * [Exception] API 호출 시 누락된 값이 있을 경우
+     *
+     * @param ex IllegalArgumentException
+     * @return ResponseEntity<ErrorResponse>
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+
+        log.error("IllegalArgumentException", ex);
+
+        String message = ex.getMessage();
+
+        final ErrorResponse response = ErrorResponse.builder()
+                .status(ErrorCode.NULL_POINT_ERROR.getValue())
+                .error(ErrorCode.NULL_POINT_ERROR.getStatus())
+                .message(message)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
      * [Exception] 비즈니스로직에서 에서 발생한 에러
      *
      * @param ex BusinessExceptionHandler
-     * @return ResponseEntity
+     * @return ResponseEntity<ErrorResponse>
      */
     @ExceptionHandler(BusinessExceptionHandler.class)
     public ResponseEntity<ErrorResponse> handleCustomException(BusinessExceptionHandler ex) {
+
+        log.error("BusinessExceptionHandler", ex);
 
         ErrorCode errorCode = ex.getErrorCode();
         String message = ex.getMessage();
