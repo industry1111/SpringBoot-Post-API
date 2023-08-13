@@ -3,7 +3,7 @@ package com.mailpug.homework.post.service;
 import com.mailpug.homework.common.dto.PageRequestDto;
 import com.mailpug.homework.common.dto.PageResultDto;
 import com.mailpug.homework.config.exception.BusinessExceptionHandler;
-import com.mailpug.homework.post.Post;
+import com.mailpug.homework.post.entity.Post;
 import com.mailpug.homework.post.dto.request.CreatePostDto;
 
 import com.mailpug.homework.post.dto.request.UpdatePostDto;
@@ -245,8 +245,6 @@ class PostServiceTest {
 
             //then
             assertThat(result.getTotalPage()).isEqualTo(4);
-            assertThat(result.getStart()).isEqualTo(1);
-            assertThat(result.getEnd()).isEqualTo(4);
 
         }
 

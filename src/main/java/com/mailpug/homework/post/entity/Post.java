@@ -1,4 +1,4 @@
-package com.mailpug.homework.post;
+package com.mailpug.homework.post.entity;
 
 import com.mailpug.homework.common.entity.BaseEntity;
 import com.mailpug.homework.post.dto.request.UpdatePostDto;

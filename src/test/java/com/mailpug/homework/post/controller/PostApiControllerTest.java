@@ -2,9 +2,8 @@ package com.mailpug.homework.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mailpug.homework.common.codes.ErrorCode;
-import com.mailpug.homework.common.dto.PageRequestDto;
 import com.mailpug.homework.config.exception.BusinessExceptionHandler;
-import com.mailpug.homework.post.Post;
+import com.mailpug.homework.post.entity.Post;
 import com.mailpug.homework.post.dto.request.CreatePostDto;
 import com.mailpug.homework.post.dto.request.UpdatePostDto;
 import com.mailpug.homework.post.service.PostService;

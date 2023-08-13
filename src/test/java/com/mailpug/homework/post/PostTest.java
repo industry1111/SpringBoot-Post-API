@@ -1,6 +1,7 @@
 package com.mailpug.homework.post;
 
 import com.mailpug.homework.post.dto.request.UpdatePostDto;
+import com.mailpug.homework.post.entity.Post;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,7 @@
 package com.mailpug.homework.post.repository;
 
 import com.mailpug.homework.config.Appconfig;
-import com.mailpug.homework.post.Post;
+import com.mailpug.homework.post.entity.Post;
 import com.mailpug.homework.post.dto.response.ResponsePostListDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

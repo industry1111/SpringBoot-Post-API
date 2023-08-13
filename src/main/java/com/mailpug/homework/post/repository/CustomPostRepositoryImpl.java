@@ -1,8 +1,9 @@
 package com.mailpug.homework.post.repository;
 
-import com.mailpug.homework.post.QPost;
+
 import com.mailpug.homework.post.dto.response.QResponsePostListDto;
 import com.mailpug.homework.post.dto.response.ResponsePostListDto;
+import com.mailpug.homework.post.entity.QPost;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
