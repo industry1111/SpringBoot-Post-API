@@ -3,9 +3,15 @@ package com.mailpug.homework.post.controller;
 import com.mailpug.homework.common.codes.SuccessCode;
 import com.mailpug.homework.common.dto.PageRequestDto;
 import com.mailpug.homework.common.dto.PageResultDto;
-import com.mailpug.homework.common.reponse.ApiResponse;
-import com.mailpug.homework.post.PostDto;
+import com.mailpug.homework.common.reponse.CustomApiResponse;
+import com.mailpug.homework.common.reponse.ErrorResponse;
+import com.mailpug.homework.post.dto.CreatePostDto;
+import com.mailpug.homework.post.dto.PostDto;
 import com.mailpug.homework.post.service.PostService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+
+@Api(tags = "게시판 CRUD API")
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -28,10 +36,14 @@ public class PostApiController {
      *
      * @return ResponseEntity<ApiResponse<Long>>: 생성된 게시글 번호 및 응답 코드 반환
      */
+    @Operation(summary = "게시글 등록", description = "게시글을 등록 합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message ="INSERT SUCCESS"),
+            @ApiResponse(code =400, message = "잘못된 요청 입니다.", response = ErrorResponse.class)})
     @PostMapping
-    public ResponseEntity<ApiResponse<Long>> addPost(@Valid @RequestBody PostDto postDto, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
+    public ResponseEntity<CustomApiResponse<Long>> addPost(@Valid @RequestBody CreatePostDto createPostDto, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
 
-        Long result = postService.addPost(postDto, userId);
+        Long result = postService.addPost(createPostDto, userId);
 
         return createApiResponseEntity(result, SuccessCode.INSERT_SUCCESS);
     }
@@ -42,7 +54,7 @@ public class PostApiController {
      * @return ResponseEntity<ApiResponse<PostDto>>: 조회한 게시글 결과 및 응답 코드 반환
      */
     @GetMapping("/{postId}")
-    public ResponseEntity<ApiResponse<PostDto>> getPost(@PathVariable Long postId) {
+    public ResponseEntity<CustomApiResponse<PostDto>> getPost(@PathVariable Long postId) {
 
         PostDto result = postService.getPost(postId);
 
@@ -55,7 +67,7 @@ public class PostApiController {
      * @return ResponseEntity<ApiResponse<PostDto>>: 수정된 게시글 번호 및 응답 코드 반환
      */
     @PatchMapping
-    public ResponseEntity<ApiResponse<Long>> modifyPost(@Valid @RequestBody PostDto postDto,  @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
+    public ResponseEntity<CustomApiResponse<Long>> modifyPost(@Valid @RequestBody PostDto postDto, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
 
         if (postDto.getId() == null) {
             throw new IllegalArgumentException("게시글 번호는 필수 입니다.");
@@ -72,7 +84,7 @@ public class PostApiController {
      * @return ResponseEntity<ApiResponse<PostDto>>: 삭제된 게시글 번호 및 응답 코드 반환
      */
     @DeleteMapping("{postId}")
-    public ResponseEntity<ApiResponse<Long>> deletePost(@PathVariable Long postId, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
+    public ResponseEntity<CustomApiResponse<Long>> deletePost(@PathVariable Long postId, @RequestHeader(name = "X-USERID") @Size(min=3,max = 10) String userId) {
 
         postService.deletePost(postId, userId);
 
@@ -85,7 +97,7 @@ public class PostApiController {
      * @return ResponseEntity<ApiResponse<PostDto>>: 삭제된 게시글 번호 및 응답 코드 반환
      */
     @GetMapping
-    public ResponseEntity<ApiResponse<PageResultDto<PostDto>>> getPostList(@RequestBody PageRequestDto pageRequestDto) {
+    public ResponseEntity<CustomApiResponse<PageResultDto<PostDto>>> getPostList(@RequestBody PageRequestDto pageRequestDto) {
 
         PageResultDto<PostDto> result = postService.getPostList(pageRequestDto);
 
@@ -99,13 +111,13 @@ public class PostApiController {
      * @return ResponseEntity<ApiResponse<T>>
      */
 
-    private <T> ResponseEntity<ApiResponse<T>> createApiResponseEntity(T result, SuccessCode successCode) {
-        ApiResponse<T> apiResponse = ApiResponse.<T>builder()
+    private <T> ResponseEntity<CustomApiResponse<T>> createApiResponseEntity(T result, SuccessCode successCode) {
+        CustomApiResponse<T> customApiResponse = CustomApiResponse.<T>builder()
                 .result(result)
                 .resultCode(successCode.getStatus())
                 .resultMsg(successCode.getMessage())
                 .build();
 
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(customApiResponse, HttpStatus.OK);
     }
 }

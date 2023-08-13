@@ -2,7 +2,7 @@ package com.mailpug.homework.post.repository;
 
 import com.mailpug.homework.config.Appconfig;
 import com.mailpug.homework.post.Post;
-import com.mailpug.homework.post.PostDto;
+import com.mailpug.homework.post.dto.PostDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

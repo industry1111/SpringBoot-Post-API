@@ -5,7 +5,8 @@ import com.mailpug.homework.common.codes.ErrorCode;
 import com.mailpug.homework.common.dto.PageRequestDto;
 import com.mailpug.homework.config.exception.BusinessExceptionHandler;
 import com.mailpug.homework.post.Post;
-import com.mailpug.homework.post.PostDto;
+import com.mailpug.homework.post.dto.CreatePostDto;
+import com.mailpug.homework.post.dto.PostDto;
 import com.mailpug.homework.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ class PostApiControllerTest {
         @Test
         void success() throws Exception {
             //given
-            PostDto postDto = PostDto.builder()
+            CreatePostDto postDto = CreatePostDto.builder()
                     .name("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글내용")
@@ -63,7 +64,7 @@ class PostApiControllerTest {
                             .author(xUserId)
                             .build();
 
-            when(postService.addPost(any(PostDto.class), anyString())).thenReturn(post.getId());
+            when(postService.addPost(any(CreatePostDto.class), anyString())).thenReturn(post.getId());
 
             //when
             //then
@@ -79,7 +80,7 @@ class PostApiControllerTest {
         @Test
         void xUserIdIsNull() throws Exception {
             //given
-            PostDto postDto = PostDto.builder()
+            CreatePostDto postDto = CreatePostDto.builder()
                     .name("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글내용")
@@ -98,7 +99,7 @@ class PostApiControllerTest {
         @Test
         void xUserIdInvalid() throws Exception{
             //given
-            PostDto postDto = PostDto.builder()
+            CreatePostDto postDto = CreatePostDto.builder()
                     .name("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글내용")
@@ -120,7 +121,7 @@ class PostApiControllerTest {
         @Test
         void postNameIsNull() throws Exception{
             //given
-            PostDto postDto = PostDto.builder()
+            CreatePostDto postDto = CreatePostDto.builder()
                     .title("게시글 제목")
                     .content("게시글내용")
                     .build();
@@ -141,7 +142,7 @@ class PostApiControllerTest {
         @Test
         void postTitleIsEmpty() throws Exception{
             //given
-            PostDto postDto = PostDto.builder()
+            CreatePostDto postDto = CreatePostDto.builder()
                     .name("SpringBoot")
                     .title("")
                     .content("게시글내용")
@@ -163,7 +164,7 @@ class PostApiControllerTest {
         @Test
         void postTitleIsNull() throws Exception{
             //given
-            PostDto postDto = PostDto.builder()
+            CreatePostDto postDto = CreatePostDto.builder()
                     .name("SpringBoot")
                     .content("게시글내용")
                     .build();

@@ -4,7 +4,8 @@ import com.mailpug.homework.common.dto.PageRequestDto;
 import com.mailpug.homework.common.dto.PageResultDto;
 import com.mailpug.homework.config.exception.BusinessExceptionHandler;
 import com.mailpug.homework.post.Post;
-import com.mailpug.homework.post.PostDto;
+import com.mailpug.homework.post.dto.CreatePostDto;
+import com.mailpug.homework.post.dto.PostDto;
 
 import com.mailpug.homework.post.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +46,7 @@ class PostServiceTest {
 
         //given
         String userId = "user1";
-        PostDto postDto = PostDto.builder()
+        CreatePostDto postDto = CreatePostDto.builder()
                 .name("JAVA")
                 .title("게시글 제목")
                 .content("게시글 내용")
