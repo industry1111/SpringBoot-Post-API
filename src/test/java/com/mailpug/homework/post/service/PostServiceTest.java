@@ -7,6 +7,7 @@ import com.mailpug.homework.post.Post;
 import com.mailpug.homework.post.dto.CreatePostDto;
 import com.mailpug.homework.post.dto.PostDto;
 
+import com.mailpug.homework.post.dto.UpdatePostDto;
 import com.mailpug.homework.post.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -109,12 +110,11 @@ class PostServiceTest {
                     .build();
 
             String modifiedText = "내용 수정";
-            PostDto postDto = PostDto.builder()
+            UpdatePostDto postDto = UpdatePostDto.builder()
                     .id(1L)
                     .name("Junit")
                     .title("수정된 제목")
                     .content(modifiedText)
-                    .author("user1")
                     .build();
 
             when(postRepository.findById(anyLong()))
@@ -139,12 +139,11 @@ class PostServiceTest {
                     .build();
 
             String modifiedText = "내용 수정";
-            PostDto postDto = PostDto.builder()
+            UpdatePostDto postDto = UpdatePostDto.builder()
                     .id(1L)
                     .name("Junit")
                     .title("수정된 제목")
                     .content(modifiedText)
-                    .author("user1")
                     .build();
 
             when(postRepository.findById(anyLong()))
@@ -169,12 +168,11 @@ class PostServiceTest {
                     .build();
 
             String modifiedText = "내용 수정";
-            PostDto postDto = PostDto.builder()
+            UpdatePostDto postDto = UpdatePostDto.builder()
                     .id(2L)
                     .name("Junit")
                     .title("수정된 제목")
                     .content(modifiedText)
-                    .author("user1")
                     .build();
 
             //when

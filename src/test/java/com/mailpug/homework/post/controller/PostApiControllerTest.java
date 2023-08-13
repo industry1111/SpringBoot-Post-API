@@ -7,6 +7,7 @@ import com.mailpug.homework.config.exception.BusinessExceptionHandler;
 import com.mailpug.homework.post.Post;
 import com.mailpug.homework.post.dto.CreatePostDto;
 import com.mailpug.homework.post.dto.PostDto;
+import com.mailpug.homework.post.dto.UpdatePostDto;
 import com.mailpug.homework.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -192,12 +193,13 @@ class PostApiControllerTest {
         void success() throws Exception {
             //given
             String modifiedText = "텍스트 수정";
-            PostDto updatePostDto = PostDto.builder()
+            UpdatePostDto updatePostDto = UpdatePostDto.builder()
                     .id(1L)
                     .name("Spring")
                     .title("타이틀 변경")
                     .content(modifiedText)
                     .build();
+
             String xUserId = "user1";
 
             when(postService.modifyPost(any(),anyString()))
@@ -219,7 +221,7 @@ class PostApiControllerTest {
         void postIdIsNull() throws Exception {
             //given
 
-            PostDto updatePostDto = PostDto.builder()
+            UpdatePostDto updatePostDto = UpdatePostDto.builder()
                     .name("SpringBoot")
                     .title("게시글 생성")
                     .content("게시글 내용")
@@ -231,7 +233,7 @@ class PostApiControllerTest {
                             .content(objectMapper.writeValueAsString(updatePostDto))
                             .header("X-USERID", "user2"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.message").value("게시글 번호는 필수 입니다."));
+                    .andExpect(jsonPath("$.message").value("게시글 번호는 필수 값 입니다."));
         }
 
         @DisplayName("실패 - 작성자 수정자 다름")
@@ -245,7 +247,7 @@ class PostApiControllerTest {
                     .author("user1")
                     .build();
 
-            PostDto updatePostDto = PostDto.builder()
+            UpdatePostDto updatePostDto = UpdatePostDto.builder()
                     .id(1L)
                     .name("SpringBoot")
                     .title("게시글 생성")

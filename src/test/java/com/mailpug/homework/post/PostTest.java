@@ -1,5 +1,6 @@
 package com.mailpug.homework.post;
 
+import com.mailpug.homework.post.dto.UpdatePostDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +22,7 @@ class PostTest {
                 .build();
 
         //when
-        PostDto updatePostDto = PostDto.builder()
+        UpdatePostDto updatePostDto = UpdatePostDto.builder()
                 .name("Spring")
                 .title("게시글 수정")
                 .content("게시글 내용 수정")
