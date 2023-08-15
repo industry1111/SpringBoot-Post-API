@@ -90,7 +90,7 @@ class PostApiControllerTest {
             mockMvc.perform(post("/posts")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(postDto)))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message").value("X-USERID 값은 필수 입니다."));
         }
 
@@ -112,7 +112,7 @@ class PostApiControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(postDto))
                             .header("X-USERID", xUserId))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message").value("X-UERID는 3자에서 10자 사이여야 합니다."));
         }
 
@@ -133,7 +133,7 @@ class PostApiControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(postDto))
                             .header("X-USERID", xUserId))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message").value("게시글의 카테고리는 필수 값 입니다."));
         }
 
@@ -157,7 +157,7 @@ class PostApiControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(postDto))
                             .header("X-USERID", xUserId))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message").value("게시글 제목은 1~100자 사이로 작성해 주세요."));
         }
 
@@ -178,7 +178,7 @@ class PostApiControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(postDto))
                             .header("X-USERID", xUserId))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message").value("게시글의 제목은 필수 값 입니다."));
         }
 
@@ -232,7 +232,7 @@ class PostApiControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updatePostDto))
                             .header("X-USERID", "user2"))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.message").value("게시글 번호는 필수 값 입니다."));
         }
 
