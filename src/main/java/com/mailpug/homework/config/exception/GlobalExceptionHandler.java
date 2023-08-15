@@ -11,12 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.NoResultException;
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -44,7 +39,7 @@ public class GlobalExceptionHandler {
 
         final ErrorResponse response = getErrorResponse (errorCode,message);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -66,7 +61,7 @@ public class GlobalExceptionHandler {
 
         final ErrorResponse response = getErrorResponse (errorCode,message);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -80,7 +75,7 @@ public class GlobalExceptionHandler {
 
         log.error("ConstraintViolationException", ex);
 
-        ErrorCode errorCode = ErrorCode.INVALID_INPUT_HEADER;
+        ErrorCode errorCode = ErrorCode.BAD_REQUEST;
 
         //propertyPath 값 가져오기
         String property = ex.getConstraintViolations()
@@ -97,7 +92,7 @@ public class GlobalExceptionHandler {
 
         final ErrorResponse response = getErrorResponse (errorCode,message);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -117,7 +112,7 @@ public class GlobalExceptionHandler {
 
         final ErrorResponse response = getErrorResponse (errorCode,message);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -137,7 +132,7 @@ public class GlobalExceptionHandler {
 
         final ErrorResponse response = getErrorResponse (errorCode,message);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
 
