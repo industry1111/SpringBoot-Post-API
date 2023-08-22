@@ -40,7 +40,7 @@ project-root/
     - `response`: API 응답과 관련된 클래스들이 들어있습니다.
         - `ApiResponse.java`: API 응답을 나타내는 클래스입니다.
         - `ErrorResponse.java`: 에러 응답을 나타내는 클래스입니다.
-- `config`: 게시글 관련 코드들을 포함하는 패키지입니다.
+- `config`: 프로젝트 관련 설정 코드들을 포함하는 패키지입니다.
     - `exception`: 예외 처리 관련 클래스들이 위치합니다.
         - `BusinessExceptionHandler`: 비즈니스 예외 처리를 담당하는 클래스입니다.
         - `GlobalExceptionHandler`: 전역 예외 처리를 담당하는 클래스입니다.
